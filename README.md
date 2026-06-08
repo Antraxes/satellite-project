@@ -6,10 +6,10 @@ A threejs project that simulates the orbit of all non-decayed satellites and spa
 
 ### Research
 - Data is stored in a JSON file, and was acquired from the space-track.org API. <br>
-https://www.space-track.org/basicspacedata/query/class/gp/decay_date/null-val/epoch/%3Enow-10/format/json <br>
 
 API stands for Application Programming Interface. They are "mechanisms that enable two software components to communicate with each other using a set of definitions and protocols." (Amazon Web Services, 2025) It is through this interface provided by space-track.org that I was able to request a JSON containing data on all satellites that do not have a decay date; a decay date signifies that a satellite is no longer orbiting. JSON stands for JavaScript Object Notation. It's a way to format data, making it easier for humans to read and access. It's core structure is almost always based on key: value pairs. (Robbins, 2022)
 
+This is the request I made to the API: https://www.space-track.org/basicspacedata/query/class/gp/decay_date/null-val/epoch/%3Enow-10/format/json 
 This is the structure of one of the satellite objects stored in the JSON:
 ```json
 {
@@ -55,7 +55,7 @@ This is the structure of one of the satellite objects stored in the JSON:
     "TLE_LINE2": "2 00005  34.2474 348.0744 1835465  89.1892 291.7390 10.85993221442090"
   },
 ```
-
+The relevant pieces of data in this JSON for the simulation are TLE_LINE1 and TLE_LINE2, which are used in an algorithm called SGP4 to provide orbital data for a satellite at a given epoch. The satellites are coloured using the HSL colour system. The hue changes based on the age of the satellite in milliseconds. The ranged starts at a value of 120 for satellies aged 0 milliseconds, and decreases to 0 as the satellies get older up to the eldest. LAUNCH_DATE is used to calculate the age of satellites, which is then mapped to the hue range.
 
 
 - Who are the target audience? 
@@ -70,7 +70,7 @@ alternatively, video and image documentation may also be appropriate. Your pdf
 portfolio must include a link to your Git repository and, if appropriate, a link to your
 website.
 
-### References and Links - Harvard system citations as appropriate.
+### References and Links
 Amazon Web Services (2025). What is an API? - API Beginner’s Guide - AWS. [online] Amazon Web Services, Inc. Available at: https://aws.amazon.com/what-is/api/ [Accessed 4 Jun. 2026].
 
 Robbins, S. (2022). A beginner’s guide to JSON, the data format for the internet. [online] Stack Overflow Blog. Available at: https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/ [Accessed 4 Jun. 2026].

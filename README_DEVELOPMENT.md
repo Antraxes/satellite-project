@@ -566,6 +566,7 @@ To be honest, this sounds pretty bad. I'm going to do some research on what make
 
 https://jarednielsen.medium.com/data-sonification-and-web-scraping-with-node-js-and-tone-js-eaf2cd35a000 this article may be useful.
 
+## Switch to satellite age 
 I have decided to steer away from sonification of this data as whilst it is cool as a concept I don't know if it is something I can implement. 
 
 Instead I'm now drawn to the idea of changing the colour of each satellite based on the age of the satellite. Might use HSL for this as I remember colour is based on rotation around a circle, not three separate values. 
