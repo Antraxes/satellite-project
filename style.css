@@ -1,3 +1,6 @@
+body { 
+    margin: 0; 
+}
 .audio-button {
     display: block;
     position: absolute;
@@ -9,6 +12,3 @@
     padding: 10px;
     border-radius: 15%;
 }
-/* .audio-button {
-
-} */
