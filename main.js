@@ -2,6 +2,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import * as satellite from 'satellite.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import * as Tone from "tone";
 
 
 
@@ -37,6 +38,18 @@ async function main() {
     const amb_light = new THREE.AmbientLight(color, amb_intensity);
     scene.add(amb_light);
 
+    // https://tonejs.github.io/docs/15.1.22/classes/Oscillator.html
+    const osc = new Tone.Oscillator(440, "sawtooth4").toDestination();
+    osc.volume.value = -40;
+
+    // don't play audio until user has clicked the play audio button
+    let audio_button = document.querySelector(".audio-button");
+    audio_button.addEventListener("click", async () => {
+        await Tone.start();
+        console.log("Audio may now be played");
+        osc.start();
+    })
+
     // make a sphere for earth
     const loader = new GLTFLoader();
     let earth;
@@ -61,7 +74,8 @@ async function main() {
     // scene.add(earth_sphere)
 
     // use this scale to convert km above earth's center to scene units for satellite positions
-    const SCALE_KM_TO_SCENE_UNITS = 10 / 6371;
+    const EARTH_RADIUS = 6371;
+    const SCALE_KM_TO_SCENE_UNITS = 10 / EARTH_RADIUS;
 
     // create a list of all satellite records
     let sat_recs = []
@@ -69,7 +83,8 @@ async function main() {
         const sat_record = satellite.twoline2satrec(satellite_obj.TLE_LINE1, satellite_obj.TLE_LINE2);
         sat_recs.push(sat_record);
     }
-    console.log(satellite.propagate(sat_recs[0], new Date()));
+
+    // console.log(satellite.propagate(sat_recs[0], new Date()));
 
     // use instancedmesh to allow for thousands of the same shape to be used
     const num_of_sats = satellite_objs.length;
@@ -88,6 +103,9 @@ async function main() {
         else {return} // prevents anything from rendering until 3d model finished loading
         
         renderer.render( scene, camera );
+
+        let average_altitude = 0;
+
         for (let i = 0; i < sat_recs.length; i++) {
             const propagated_sat = satellite.propagate(sat_recs[i], current_time);
             
@@ -98,16 +116,23 @@ async function main() {
             let y = propagated_sat.position.y * SCALE_KM_TO_SCENE_UNITS;
             let z = propagated_sat.position.z * SCALE_KM_TO_SCENE_UNITS;
 
-
             matrix.makeTranslation(x,y,z);
 
             sat_mesh.setMatrixAt(i, matrix);
-    }
 
-    sat_mesh.instanceMatrix.needsUpdate = true;
-    current_time = new Date(current_time.getTime() + 1000);
-    }
+            // calculate altitude
+            const distance_from_center = Math.sqrt(
+                (propagated_sat.position.x ** 2) + (propagated_sat.position.y ** 2) + (propagated_sat.position.z ** 2)
+            )
+            if (i == 0) {average_altitude = (distance_from_center - EARTH_RADIUS) / 4;}
+            
+        };
+        console.log(average_altitude);
+        osc.frequency.value = average_altitude;
 
+        sat_mesh.instanceMatrix.needsUpdate = true;
+        current_time = new Date(current_time.getTime() + 1000);
+    }
     renderer.setAnimationLoop(animate);
 }
 main();

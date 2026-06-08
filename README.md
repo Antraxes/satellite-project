@@ -500,3 +500,66 @@ main();
 ```
 <img src="./readme-images/rendered-earth-model.png" alt="all satellites plotted around the earth" width="900"/>
 <img src="./readme-images/rendered-earth-model-zoomed-out.png" alt="all satellites plotted around the earth" width="900"/>
+
+## Back to Audio
+- First and foremost I need to figure out how to produce sounds using javascript. I will look up if there are oscillators I can use.
+- Decided on using tone.js, seems really simple to use. i added a button allows for audio, and plays a sawtooth wave at 440hz.
+
+
+```javascript
+    // https://tonejs.github.io/docs/15.1.22/classes/Oscillator.html
+    const osc = new Tone.Oscillator(440, "sawtooth4").toDestination();
+    osc.volume.value = -40;
+
+    // don't play audio until user has clicked the play audio button
+    let audio_button = document.querySelector(".audio-button");
+    audio_button.addEventListener("click", async () => {
+        await Tone.start();
+        console.log("Audio may now be played");
+        osc.start();
+    })
+```
+I have changed the code so that the oscillator frequency changes with the altitude of the first satrec in the list over time. This is done inside the animate function.
+
+```javascript
+    function animate(time) {
+        camera_controls.update();
+        if (earth) {earth.rotation.y += 0.001;} // check to make sure earth model exists
+        else {return} // prevents anything from rendering until 3d model finished loading
+        
+        renderer.render( scene, camera );
+
+        let average_altitude = 0;
+
+        for (let i = 0; i < sat_recs.length; i++) {
+            const propagated_sat = satellite.propagate(sat_recs[i], current_time);
+            
+            // was getting error of null propagated_sat so added this check to prevent trying to access position of null values
+            if (!propagated_sat || !propagated_sat.position) { continue }; 
+
+            let x = propagated_sat.position.x * SCALE_KM_TO_SCENE_UNITS;
+            let y = propagated_sat.position.y * SCALE_KM_TO_SCENE_UNITS;
+            let z = propagated_sat.position.z * SCALE_KM_TO_SCENE_UNITS;
+
+            matrix.makeTranslation(x,y,z);
+
+            sat_mesh.setMatrixAt(i, matrix);
+
+            // calculate altitude
+            const distance_from_center = Math.sqrt(
+                (propagated_sat.position.x ** 2) 
+                + (propagated_sat.position.y ** 2) 
+                + (propagated_sat.position.z ** 2)
+            )
+            if (i == 0) {average_altitude = (distance_from_center - EARTH_RADIUS) / 4;}
+            
+        };
+        console.log(average_altitude);
+        osc.frequency.value = average_altitude;
+
+        sat_mesh.instanceMatrix.needsUpdate = true;
+        current_time = new Date(current_time.getTime() + 1000);
+    }
+```
+
+To be honest, this sounds pretty bad. I'm going to do some research on what makes oscillators sound good, I'm assuming it's adding things like reverb, filters, and layering oscillators. I remember harmonics being a thing too, but I don't remember what that specifically is.
