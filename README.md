@@ -1,7 +1,7 @@
 # Crowded Skies -  Visualisation of Earth Satellites
-### Background/Introduction: What this is about (the general idea- here include the link to your Git repository).
+### Background/Introduction
 
-A threejs project that simulates the orbit of all non-decayed satellites and space junk around Earth.
+A threejs project that simulates the orbit of all non-decayed satellites around Earth that are at least 10cm in diameter. 
 
 
 ### Research
@@ -55,23 +55,25 @@ This is the structure of one of the satellite objects stored in the JSON:
     "TLE_LINE2": "2 00005  34.2474 348.0744 1835465  89.1892 291.7390 10.85993221442090"
   },
 ```
-The relevant pieces of data in this JSON for the simulation are TLE_LINE1 and TLE_LINE2, which are used in an algorithm called SGP4 to provide orbital data for a satellite at a given epoch. The satellites are coloured using the HSL colour system. The hue changes based on the age of the satellite in milliseconds. The ranged starts at a value of 120 for satellies aged 0 milliseconds, and decreases to 0 as the satellies get older up to the eldest. LAUNCH_DATE is used to calculate the age of satellites, which is then mapped to the hue range.
+The relevant pieces of data in this JSON for the simulation are TLE_LINE1 and TLE_LINE2, which are used in an algorithm called SGP4 to provide orbital data for a satellite at a given epoch. The satellites are coloured using the HSL colour system. The hue changes based on the age of the satellite in milliseconds. The range starts at a value of 120 for satellies aged 0 milliseconds, and decreases to 0 as the satellies get older up to the eldest. LAUNCH_DATE is used to calculate the age of satellites, which is then mapped to the hue range.
 
+### Audience and Intentions
+My intended target audience for this project is space enthusiasts, students, and potentially policy makers/politicians.
 
-- Who are the target audience? 
-- What did you want to convey to that audience and why?
+I wanted to convey the sheer magnitude of space debris around our planet and how most of this occured during more recent years. My intention is for people to see this simulation and be driven to start asking questions about what the implications of an ever growing number of satellites are. There are no international laws with the aim of cleaning up space debris (NASA, 2023) and so satellites needed for communication, research, and more could end up damaged or useless if collisions occur. Collisions themselves are the largest contributor to space debris and could end up causing "Kessler Syndome", which is where "each collision between objects generates more space debris, which increases the likelihood of further collisions". (Murtaza et al., 2020)
 
 ### Project Process & Design
 Process and Design documentation can be found [here](README_DEVELOPMENT.md)
 
 ### Final Visualisation 
-- if interactive, a link to where it exists, or how it can be run;
-alternatively, video and image documentation may also be appropriate. Your pdf
-portfolio must include a link to your Git repository and, if appropriate, a link to your
-website.
+Simulation can be accessed [here](https://antraxes.github.io/satellite-project/)
 
 ### References and Links
 Amazon Web Services (2025). What is an API? - API Beginner’s Guide - AWS. [online] Amazon Web Services, Inc. Available at: https://aws.amazon.com/what-is/api/ [Accessed 4 Jun. 2026].
 
 Robbins, S. (2022). A beginner’s guide to JSON, the data format for the internet. [online] Stack Overflow Blog. Available at: https://stackoverflow.blog/2022/06/02/a-beginners-guide-to-json-the-data-format-for-the-internet/ [Accessed 4 Jun. 2026].
+
+NASA (2023). Space Debris. [online] NASA. Available at: https://www.nasa.gov/headquarters/library/find/bibliographies/space-debris/ [Accessed 4 Jun. 2026].
+
+Murtaza, A., Pirzada, S.J.H., Xu, T. and Jianwei, L. (2020). Orbital Debris Threat for Space Sustainability and Way Forward (Review Article). IEEE Access, [online] 8, pp.61000–61019. doi:https://doi.org/10.1109/access.2020.2979505.
 ‌
